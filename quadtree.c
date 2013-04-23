@@ -31,7 +31,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <sys/mman.h>
 #include <unistd.h>
 #include "iterator.h"
 #include "tea_vec.h"
@@ -166,11 +165,13 @@ quadtree_t *quadtree_new(const int w, const int h)
     qt->w = w;
     qt->h = h;
     vec2Set(root->org, w / 2, h / 2);
+
+    return qt;
 }
 
 /**
  * @returns an index from 0 to 3 */
-static int __get_child_idx(node_t * parent, veci2_t org, const int midx,
+static int __get_child_idx(veci2_t org, const int midx,
                            const int midy)
 {
     if (org[0] <= midx)
@@ -233,7 +234,7 @@ static node_t *__qt_get(node_t * node, veci2_t org, int midx, int midy)
 
         assert(!node->item);
 
-        child_idx = __get_child_idx(node, org, midx, midy);
+        child_idx = __get_child_idx(org, midx, midy);
 
         __box_by_childidx(child_idx, &midx, &midy);
 
@@ -359,7 +360,7 @@ __qt_add(node_t * parent, veci2_t org, int midx, int midy, void *item)
 
     node_t *child;
 
-    child_idx = __get_child_idx(parent, org, midx, midy);
+    child_idx = __get_child_idx(org, midx, midy);
     child = parent->kids[child_idx];
 
     if (child)
