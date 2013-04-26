@@ -8,6 +8,8 @@
 
 #include "quadtree.h"
 
+// FIXME: need to add tests
+
 #if 0
 void TxestCbuffer_set_size_with_init(CuTest * tc)
 {
